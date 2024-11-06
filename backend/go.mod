@@ -1,6 +1,6 @@
 module github.com/ShardenduMishra22/go-nextjs
 
-go 1.23.0
+go 1.23
 
 require (
 	github.com/gorilla/mux v1.8.1
