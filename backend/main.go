@@ -53,6 +53,35 @@ func main() {
 	ListenAndServe(router)
 }
 
+// Test Database Connection
+// func testDatabaseConnection() {
+// 	serviceURI := os.Getenv("DATABASE_URL")
+// 	fmt.Println(serviceURI)
+// 	if serviceURI == "" {
+// 		log.Fatal("DATABASE_URL is not set in the environment variables")
+// 	}
+
+// 	dbConn, err := sql.Open("postgres", serviceURI)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	defer dbConn.Close()
+
+// 	rows, err := dbConn.Query("SELECT version()")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	for rows.Next() {
+// 		var result string
+// 		err = rows.Scan(&result)
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		}
+// 		fmt.Printf("Version: %s\n", result)
+// 	}
+// }
+
 // Delete a user
 func deleteUser(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -209,9 +238,14 @@ func CreateTable(db *sql.DB) {
 
 // Database connection
 func ConnectDatabase() *sql.DB {
-	// Ensure that SSL mode is disabled (when using Docker)
-	connStr := os.Getenv("DATABASE_URL") + "?sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	// Load database URL from the environment variables
+	databaseURL := os.Getenv("DATABASE_URL")
+	if databaseURL == "" {
+		log.Fatal("DATABASE_URL is not set in the environment variables")
+	}
+
+	// Open a connection to the database
+	db, err := sql.Open("postgres", databaseURL)
 	if err != nil {
 		log.Fatal(err)
 	}
