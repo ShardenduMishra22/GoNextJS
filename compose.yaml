@@ -2,16 +2,35 @@ version: '3.8'
 
 services:
   db:
-    container_name: db
-    image: postgres:13
+  container_name: db
+  image: postgres:13
+  environment:
+    POSTGRES_USER: shardendu1234
+    POSTGRES_PASSWORD: shardendu1234
+    POSTGRES_DB: shardendu1234
+  ports:
+    - "5432:5432"
+  volumes:
+    - pgdata:/var/lib/postgresql/data
+  networks:
+    - backend_network   # Add this line
+
+
+  backend:
+    container_name: backend
+    build: .
     environment:
-      POSTGRES_USER: shardendu1234
-      POSTGRES_PASSWORD: shardendu1234
-      POSTGRES_DB: shardendu1234
+      DATABASE_URL: postgres://shardendu1234:shardendu1234@db:5432/shardendu1234?sslmode=disable
     ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - backend_network
 
 volumes:
   pgdata: {}
+
+networks:
+  backend_network:
+    driver: bridge
