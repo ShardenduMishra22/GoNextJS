@@ -13,7 +13,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-
 func main() {
 	// Load environment variables from .env file
 	
